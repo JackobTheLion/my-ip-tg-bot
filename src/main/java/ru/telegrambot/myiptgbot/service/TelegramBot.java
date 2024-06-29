@@ -3,6 +3,7 @@ package ru.telegrambot.myiptgbot.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,10 +15,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final String name;
-
     private final IpClient ipClient;
-
     private final Long botAdminChatId;
+    private String currentIp;
 
     public TelegramBot(@Value("${bot.name}") String name, @Value("${bot.token}") String token,
                        @Value("${bot.AdminChatId}") Long botAdminChatId, @Autowired IpClient ipClient) {
@@ -25,6 +25,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.name = name;
         this.botAdminChatId = botAdminChatId;
         this.ipClient = ipClient;
+        this.currentIp = ipClient.getIp();
     }
 
     @Override
@@ -42,6 +43,16 @@ public class TelegramBot extends TelegramLongPollingBot {
                     update.getMessage().getChat().getFirstName(), update.getMessage().getText());
         }
         sendMessage(messageToSend);
+    }
+
+    @Scheduled(cron = "0 12 * * *")
+    public void updateIp() {
+        String ipReceived = ipClient.getIp();
+        if (!ipReceived.equals(currentIp)) {
+            log.info("Ip updated: {}", ipReceived);
+            currentIp = ipReceived;
+            sendMessage("Ip was updated. New IP is: " + ipReceived);
+        }
     }
 
     @Override
