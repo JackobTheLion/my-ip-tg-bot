@@ -45,13 +45,16 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage(messageToSend);
     }
 
-    @Scheduled(cron = "0 12 * * *")
+    @Scheduled(cron = "0 0 12 * * *")
     public void updateIp() {
+        log.info("Checking ip...");
         String ipReceived = ipClient.getIp();
         if (!ipReceived.equals(currentIp)) {
             log.info("Ip updated: {}", ipReceived);
             currentIp = ipReceived;
-            sendMessage("Ip was updated. New IP is: " + ipReceived);
+            sendMessage("Ip was updated. New IP is " + ipReceived);
+        } else {
+            log.info("IP {} did not change", currentIp);
         }
     }
 
@@ -60,7 +63,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         return this.name;
     }
 
-    private void sendMessage(String message) {
+    public void sendMessage(String message) {
         SendMessage sendMessage = new SendMessage(String.valueOf(botAdminChatId), message);
         try {
             execute(sendMessage);
