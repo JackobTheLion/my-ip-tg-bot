@@ -1,0 +1,12 @@
+bot:
+  name: ${BOT_NAME:test_bot}
+  token: ${BOT_TOKEN:test_token}
+  admin-chat-id: ${BOT_ADMIN_CHAT:12345}
+
+ip-service:
+  base-url: https://ipv4-internet.yandex.net
+  endpoint: /api/v0/ip
+
+cron:
+  ip-check: 0 0 12 * * *
+  retry-unsent: 0 0/5 * * * *

@@ -1,0 +1,12 @@
+bot:
+  name: test_bot
+  token: test_token
+  admin-chat-id: 12345
+
+ip-service:
+  base-url: http://localhost:12345
+  endpoint: /test
+
+cron:
+  ip-check: 0 0 12 * * *
+  retry-unsent: 0 0/5 * * * *

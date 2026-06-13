@@ -6,15 +6,16 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationService {
 
     private final TelegramBot telegramBot;
-    private List<String> unsentMessages = new ArrayList<>();
+    private final List<String> unsentMessages = Collections.synchronizedList(new ArrayList<>());
 
     public void notify(String message) {
         log.info("Message received: {}", message);
@@ -27,13 +28,29 @@ public class NotificationService {
         }
     }
 
-    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "${cron.retry-unsent}")
     public void sendUnsent() {
-        if (!unsentMessages.isEmpty()) {
-            log.info("{} unsent messages in queue", unsentMessages.size());
-            telegramBot.sendMessage("Отправляем отложенные сообщения");
-            unsentMessages.forEach(telegramBot::sendMessage);
-            unsentMessages = new ArrayList<>();
+        List<String> toSend;
+        synchronized (unsentMessages) {
+            if (unsentMessages.isEmpty()) return;
+            toSend = new ArrayList<>(unsentMessages);
+            unsentMessages.clear();
+        }
+        log.info("{} unsent messages in queue", toSend.size());
+        try {
+            telegramBot.sendMessage("Sending delayed messages");
+        } catch (Exception e) {
+            log.error("Failed to send delayed message header", e);
+        }
+        for (String msg : toSend) {
+            try {
+                telegramBot.sendMessage(msg);
+            } catch (Exception e) {
+                log.error("Failed to send delayed message: {}", msg, e);
+                synchronized (unsentMessages) {
+                    unsentMessages.add(msg);
+                }
+            }
         }
     }
 }
