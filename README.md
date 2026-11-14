@@ -28,8 +28,8 @@ BOT_ADMIN_CHAT - ID вашего чата с ботом
 
 Опциональные переменные (со значениями по умолчанию):
 ~~~
-IP_SERVICE_BASE_URL - URL сервиса определения IP (по умолчанию https://ipv4-internet.yandex.net)
-IP_SERVICE_ENDPOINT - эндпоинт сервиса IP (по умолчанию /api/v0/ip)
+IP_SERVICE_BASE_URL - URL сервиса определения IP (по умолчанию https://api.ipify.org)
+IP_SERVICE_ENDPOINT - эндпоинт сервиса IP (по умолчанию /)
 ~~~
 ___
 ### :gear: Технологический стек
