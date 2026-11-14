@@ -14,34 +14,49 @@ jobs:
     steps:
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ secrets.DOCKER_LOGIN }}/my-ip-tg-bot
           tags: |
             type=raw,value=latest
 
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      - name: Make Maven wrapper executable
-        run: chmod +x ./mvnw
       - name: Build with Maven
         run: ./mvnw -B package --file pom.xml
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PW }}
 
+      - name: Build Docker image for verification
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: my-ip-tg-bot:smoke-test
+
+      - name: Verify the JAR is readable by the container user
+        run: |
+          docker run --rm --entrypoint /bin/sh my-ip-tg-bot:smoke-test -ec '
+            if ! test -f /app.jar || ! test -r /app.jar; then
+              echo "Expected a readable /app.jar in the Docker image" >&2
+              exit 1
+            fi
+          '
+
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
