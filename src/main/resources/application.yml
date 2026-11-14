@@ -4,8 +4,8 @@ bot:
   admin-chat-id: ${BOT_ADMIN_CHAT:12345}
 
 ip-service:
-  base-url: https://ipv4-internet.yandex.net
-  endpoint: /api/v0/ip
+  base-url: ${IP_SERVICE_BASE_URL:https://api.ipify.org}
+  endpoint: ${IP_SERVICE_ENDPOINT:/}
 
 cron:
   ip-check: 0 0 12 * * *
