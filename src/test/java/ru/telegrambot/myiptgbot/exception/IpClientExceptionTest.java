@@ -1,10 +1,11 @@
-package ru.telegrambot.myiptgbot.service;
-
-import static org.junit.jupiter.api.Assertions.*;
+package ru.telegrambot.myiptgbot.exception;
 
 import org.junit.jupiter.api.Test;
 
-class IpClientTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+
+class IpClientExceptionTest {
 
     @Test
     void ipClientException_isRuntimeException() {
