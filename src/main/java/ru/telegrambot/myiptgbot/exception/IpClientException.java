@@ -1,4 +1,4 @@
-package ru.telegrambot.myiptgbot.service;
+package ru.telegrambot.myiptgbot.exception;
 
 public class IpClientException extends RuntimeException {
 

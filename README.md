@@ -6,8 +6,10 @@
 ### :star: Возможности приложения:
 Для получения ip нужно отправить боту команду `/ip`
 
-После развертывания также будет доступен эндпоинт http://SERVER_ADDRESS/ip:PORT, где SERVER_ADDRESS - локальный адрес сервера. \
+После развертывания также будет доступен эндпоинт `http://SERVER_ADDRESS:PORT/ip`, где `SERVER_ADDRESS` — локальный адрес сервера. \
 Порт по умолчанию 8080.
+
+На том же порту доступны Swagger UI (`/swagger-ui/index.html`) и спецификация OpenAPI (`/v3/api-docs`).
 
 Образ доступен на [docker.hub](https://hub.docker.com/repository/docker/jackobthelion/my-ip-tg-bot/general)
 

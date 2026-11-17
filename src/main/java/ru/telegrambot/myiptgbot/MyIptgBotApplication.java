@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ConfigurationPropertiesScan
 public class MyIptgBotApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MyIptgBotApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MyIptgBotApplication.class, args);
+    }
 
 }
